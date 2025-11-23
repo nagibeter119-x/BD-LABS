@@ -1,0 +1,94 @@
+
+
+-- Создание таблиц
+
+CREATE TABLE IF NOT EXISTS PUBLIC."card_types" (
+    "ID" INTEGER NOT NULL PRIMARY KEY,
+    "name" VARCHAR
+);
+
+CREATE TABLE IF NOT EXISTS PUBLIC."type_of_catches" (
+    "ID" INTEGER NOT NULL PRIMARY KEY,
+	"name" VARCHAR
+);
+
+CREATE TABLE IF NOT EXISTS PUBLIC."status_labels" (
+    "ID" INTEGER NOT NULL PRIMARY KEY,
+	"name" VARCHAR
+);
+
+CREATE TABLE IF NOT EXISTS PUBLIC."USERS" (
+    "user_number" INTEGER NOT NULL PRIMARY KEY,
+    "surname" VARCHAR,
+    "name" VARCHAR,
+    "patronymic" VARCHAR,
+    "phone_number" INTEGER,
+    "email_address" VARCHAR
+);
+
+CREATE TABLE IF NOT EXISTS PUBLIC."SALE_CARD" (
+    "unique_card_number" INTEGER NOT NULL PRIMARY KEY,
+    "card_type" INTEGER NOT NULL REFERENCES "card_types",
+    "type_of_catch" INTEGER  NOT NULL REFERENCES  "type_of_catches",
+    "brends" VARCHAR,
+    "date_" DATE,
+    "status_label" INTEGER NOT NULL REFERENCES "status_labels",
+    "user_number" INTEGER NOT NULL REFERENCES "USERS"
+);
+
+CREATE TABLE IF NOT EXISTS PUBLIC."ACCOUNTING_LOG" (
+    "entry_number" INTEGER NOT NULL PRIMARY KEY,
+    "date_of_capture" DATE,
+    "return_date" DATE,
+    "unique_card_number" INTEGER NOT NULL REFERENCES "SALE_CARD",
+    "user_number" INTEGER NOT NULL REFERENCES "USERS"
+);
+
+
+
+-- Заполнение справочника типов карт
+INSERT INTO public.card_types ("ID", name) VALUES
+(1, 'A'),  
+(2, 'B'),
+(3, 'C');
+
+-- Заполнение справочника статусов
+INSERT INTO public.status_labels ("ID", name) VALUES
+(1, 'Активна'), 
+(2, 'Архивная'),
+(3, 'Заблокирована'); 
+
+-- Заполнение справочника 
+INSERT INTO public.type_of_catches ("ID", name) VALUES
+(1, 'a'), 
+(2, 'b'), 
+(3, 'c'); 
+
+
+
+-- Заполнение таблицы пользователей (исправлены имена столбцов)
+INSERT INTO public."USERS" (user_number, surname, name, patronymic, phone_number, email_address) VALUES
+(01, 'Иванов', 'Иван', 'Иванович', 1234567, 'ivanov@mail.ru'),
+(02, 'Петров', 'Петр', 'Петрович', 7654321, 'petrov@yandex.ru'),
+(03, 'Сидорова', 'Мария', 'Сергеевна', 5554443, 'sidorova@gmail.com'),
+(04, 'Кузнецов', 'Алексей', 'Владимирович', 8889990, 'kuznetsov@mail.ru');
+
+
+
+-- Заполнение таблицы карточек (исправлены имена столбцов)
+INSERT INTO public."SALE_CARD" (unique_card_number, card_type, type_of_catch, brends, date_, status_label, user_number) VALUES
+(1001, 1, 1, 'Adventure Gear', '2023-01-15', 1, 01),
+(1002, 2, 2, 'Hunting Pro', '2023-02-20', 1, 02),
+(1003, 3, 3, 'Multi Catch', '2023-03-10', 2, 03),
+(1004, 1, 1, 'Fisherman Pride', '2023-04-05', 1, 04),
+(1005, 2, 2, 'Wild Hunter', '2023-05-12', 3, 01);
+
+-- Заполнение журнала учета (исправлены имена столбцов)
+INSERT INTO public."ACCOUNTING_LOG" (entry_number, date_of_capture, return_date, unique_card_number, user_number) VALUES
+(1, '2023-01-20', '2023-02-20', 1001, 01),
+(2, '2023-02-25', '2023-03-25', 1002, 02),
+(3, '2023-03-15', '2023-04-15', 1003, 03),
+(4, '2023-04-10', '2023-05-10', 1004, 04),
+(5, '2023-05-15', NULL, 1005, 01);
+
+COMMIT;
