@@ -1,0 +1,32 @@
+
+
+-- Создание таблиц
+CREATE TABLE IF NOT EXISTS PUBLIC."USERS" (
+    "user_number" INTEGER NOT NULL PRIMARY KEY,
+    "surname" VARCHAR,
+    "name" VARCHAR,
+    "patronymic" VARCHAR,
+    "phone_number" INTEGER,
+    "email_address" VARCHAR
+);
+
+CREATE TABLE IF NOT EXISTS PUBLIC."SALE_CARD" (
+    "unique_card_number" INTEGER NOT NULL PRIMARY KEY,
+    "card_type" VARCHAR,
+    "type_of_catch" VARCHAR,
+    "brends" VARCHAR,
+    "date_" DATE,
+    "status_label" VARCHAR,
+    "users_number" INTEGER NOT NULL REFERENCES "USERS"
+);
+
+CREATE TABLE IF NOT EXISTS PUBLIC."ACCOUNTING_LOG" (
+    "entry_number" INTEGER NOT NULL PRIMARY KEY,
+    "date_of_capture" DATE,
+    "return_date" DATE,
+    "unique_card_number" INTEGER NOT NULL REFERENCES "SALE_CARD",
+    "users_number" INTEGER NOT NULL REFERENCES "USERS"
+);
+
+
+COMMIT;
